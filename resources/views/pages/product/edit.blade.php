@@ -76,27 +76,42 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Category</label>
-                                <div class="selectgroup w-100">
-                                    <label class="selectgroup-item">
-                                        <input type="radio" name="category" value="food" class="selectgroup-input"
-                                            @if ($product->category == 'food') checked @endif>
-                                        <span class="selectgroup-button">Food</span>
-                                    </label>
-                                    <label class="selectgroup-item">
-                                        <input type="radio" name="category" value="drink" class="selectgroup-input"
-                                            @if ($product->category == 'drink') checked @endif>
-                                        <span class="selectgroup-button">Drink</span>
-                                    </label>
-                                    <label class="selectgroup-item">
-                                        <input type="radio" name="category" value="snack" class="selectgroup-input"
-                                            @if ($product->category == 'snack') checked @endif>
-                                        <span class="selectgroup-button">Snack</span>
-                                    </label>
-
-                                </div>
+                                <select class="form-control selectric @error('category_id') is-invalid @enderror"
+                                    name="category_id">
+                                    <option value="">-- Select Category --</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ $product->category_id == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group">
+                                <label>Description</label>
+                                <textarea class="form-control @error('description') is-invalid @enderror" name="description">{{$product->description}}</textarea>
+                                @error('description')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <label class="form-label w-100">Status</label>
+                                <div class="selectgroup selectgroup-pills">
+                                    <label class="selectgrroup-item">
+                                        <input type="radio" name="is_available" value="1"
+                                            class="selectgroup-input" {{$product->is_available == 1 ? 'checked' : ''}}>
+                                        <span class="selectgroup-button">Available</span>
+                                    </label>
+                                    <label class="selectgrroup-item">
+                                        <input type="radio" name="is_available" value="0"
+                                            class="selectgroup-input" {{$product->is_available == 0 ? 'checked' : ''}}>
+                                        <span class="selectgroup-button">Unavailable</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-2">
                                 <label class="form-label">Current Image</label>
                                 <img src="{{ asset('storage/products/' . $product->image) }}" alt="Product Image"
                                     class="img-thumbnail mb-3" style="max-width: 200px;">

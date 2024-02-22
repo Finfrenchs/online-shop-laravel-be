@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -57,5 +58,48 @@ class ProductController extends Controller
         $product->save();
 
         return redirect()->route('product.index')->with('success', 'Product successfully created');
+    }
+
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+        $categories = Category::all();
+        return view('pages.product.edit', compact('product', 'categories'));
+    }
+
+    public function update(Request $request, $id)
+    {
+
+        $product = Product::findOrFail($id);
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = (int) $request->price;
+        $product->stock = (int) $request->stock;
+        $product->category_id = $request->category_id;
+        $product->is_available = $request->is_available;
+
+        if ($request->hasFile('image')) {
+            // Jika sudah ada gambar, hapus gambar lama
+            if ($product->image) {
+                Storage::delete('public/products/' . $product->image);
+            }
+            // Unggah gambar baru
+            $filename = time() . '.' . $request->image->extension();
+            $request->image->storeAs('public/products', $filename);
+            $product->image = $filename;
+        }
+
+        //$product->update($request->all());
+        $product->save();
+
+        return redirect()->route('product.index')->with('success', 'Product updated successfully');
+    }
+
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return redirect()->route('product.index')->with('success', 'Product deleted successfully');
     }
 }

@@ -74,14 +74,17 @@
 
                                                 <td>{{ $category->name }}
                                                 </td>
+
                                                 <td>
-                                                    @if ($category->image)
-                                                        <img src="{{ asset($category->image) }}" alt=""
-                                                            width="100px" class="img-thumbnail">
-                                                            @else
-                                                            <span class="badge badge-danger">No Image</span>
+                                                    @if ($category->image && file_exists(public_path('storage/categories/' . $category->image)))
+                                                        <img src="{{ asset('storage/categories/'.$category->image) }}" alt="" width="100px" class="img-thumbnail">
+                                                    @elseif ($category->image)
+                                                        <span class="badge badge-warning">Image Missing</span>
+                                                    @else
+                                                        <span class="badge badge-danger">No Image</span>
                                                     @endif
                                                 </td>
+
                                                 <td>{{ $category->created_at }}</td>
                                                 <td>
                                                     <div class="d-flex justify-content-center-left">

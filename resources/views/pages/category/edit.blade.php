@@ -28,7 +28,7 @@
                 <h2 class="section-title">Category</h2>
                 <div class="card">
                     {{-- Ditambahkan atribut enctype="multipart/form-data" pada tag form untuk  --}}
-                    <form action="{{ route('category.update', $product) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('category.update', $category) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="card-header">
@@ -50,29 +50,24 @@
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
-                                <input type="text"
-                                    class="form-control @error('description')
-                                is-invalid
-                            @enderror"
-                                    name="description" value="{{ $category->price }}">
+                                <textarea class="form-control @error('description') is-invalid @enderror" name="description">{{$category->description}}</textarea>
                                 @error('description')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Current Image</label>
-                                <img src="{{ asset('storage/categories/' . $category->image) }}" alt="Category Image"
-                                    class="img-thumbnail mb-3" style="max-width: 200px;">
+                                @if ($category->image)
+                                    <img src="{{ asset('storage/categories/'.$category->image) }}" alt="Category Image" class="img-thumbnail mb-3" style="max-width: 200px;">
+                                @else
+                                    <span class="badge badge-danger">No Image</span>
+                                @endif
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">New Image</label>
-                                <input type="file"
-                                    class="form-control @error('image') is-invalid @enderror"
-                                    name="image">
+                                <input type="file" class="form-control @error('image') is-invalid @enderror" name="image">
                                 @error('image')
                                     <div class="invalid-feedback">
                                         {{ $message }}
